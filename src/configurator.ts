@@ -5,11 +5,15 @@ import pick from "lodash/fp/pick";
 export interface IConfigInterface {
   project?: string;
   ignore?: string;
+  fix?: boolean;
+  exitStatus?: boolean;
 }
 
 const defaultConfig: IConfigInterface = {
   project: "tsconfig.json",
   ignore: undefined,
+  fix: false,
+  exitStatus: false
 }
 
 const onlyKnownConfigOptions = pick(Object.keys(defaultConfig));
@@ -20,6 +24,8 @@ export const getConfig = () => {
     .allowUnknownOption() // required for tests passing in unknown options (ex: https://github.com/nadeesha/ts-prune/runs/1125728070)
     .option('-p, --project [project]', 'TS project configuration file (tsconfig.json)', 'tsconfig.json')
     .option('-i, --ignore [regexp]', 'Path ignore RegExp pattern')
+    .option('--exit-status', 'Set exit status to 1 if unused exports were found (for CI)')
+    .option('--fix', 'Fix unused exports by making them unexported')
     .parse(process.argv))
 
   const defaultConfig = {

@@ -9,7 +9,7 @@ import {
   Symbol,
   SyntaxKind,
   StringLiteral,
-  ObjectBindingPattern,
+  ObjectBindingPattern
 } from "ts-morph";
 import { isDefinitelyUsedImport } from "./util/isDefinitelyUsedImport";
 import { getModuleSourceFile } from "./util/getModuleSourceFile";
@@ -29,6 +29,7 @@ export type ResultSymbol = {
   name: string;
   line?: number;
   usedInModule: boolean;
+  symbol: Symbol;
 };
 
 export type IAnalysedResult = {
@@ -157,6 +158,7 @@ export const getExported = (file: SourceFile) =>
   file.getExportSymbols()
     .filter(symbol => !mustIgnore(symbol, file))
     .map(symbol => ({
+      symbol,
       name: symbol.compilerSymbol.name,
       line: lineNumber(symbol)
     }));
@@ -219,7 +221,7 @@ export const getPotentiallyUnused = (file: SourceFile): IAnalysedResult => {
       .map(exp => ({ ...exp, usedInModule: referencedInFile.includes(exp.name) }))
 
   return {
-    file: file.getFilePath(),
+    file: realpathSync(file.getFilePath()),
     symbols: unused,
     type: AnalysisResultTypeEnum.POTENTIALLY_UNUSED
   };
@@ -228,6 +230,7 @@ export const getPotentiallyUnused = (file: SourceFile): IAnalysedResult => {
 const emitTsConfigEntrypoints = (entrypoints: string[], onResult: OnResultType) =>
   entrypoints.map(file => ({
     file,
+    sourceFileInstance: null,
     symbols: [],
     type: AnalysisResultTypeEnum.DEFINITELY_USED,
   })).forEach(emittable => onResult(emittable))

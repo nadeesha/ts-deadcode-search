@@ -44,6 +44,8 @@ ts-prune supports CLI and file configuration via [cosmiconfig](https://github.co
 #### Configuration options
 - `-p, --project` - __tsconfig.json__ path(`tsconfig.json` by default)
 - `-i, --ignore` - errors ignore RegExp pattern
+-  `--exit-status` - Set exit status to 1 if unused exports were found (for CI)
+-  `--fix` - Fix unused exports by making them unexported
 
 CLI configuration options:
 ```bash 
@@ -56,6 +58,28 @@ Configuration file example `ts-prunerc`:
 }
 ```
  
+If you want to use ts-prune as a linter that fails when there are unused exports use `--exit-status`:
+
+```sh
+ts-prune --exit-status && echo "no unused exports" || echo "found unused exports!"
+```
+
+#### Fix mode
+
+If you want to automatically remove unused export declarations:
+
+```sh
+ts-prune --fix
+```
+
+This will cause all exported functions, classes and variables to become local declarations, and will remove `export ... from ...` statements.
+
+After this step, you should do the following things:
+
+1. Verify your code still compiles
+2. Run `ts-prune --fix` again, since there may be new unused exports after the first run
+3. Find new unused local variable declarations with tsconfig `"noUnusedLocals": true`
+
 ### FAQ
 
 #### How do I get the count of unused exports?

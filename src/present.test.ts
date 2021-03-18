@@ -9,12 +9,12 @@ describe("present", () => {
     [
       {
         type: AnalysisResultTypeEnum.POTENTIALLY_UNUSED,
-        symbols: [{ name: "foo", line: 0, usedInModule: false }],
+        symbols: [{ name: "foo", line: 0, symbol: null, usedInModule: false }],
         file: "foo.ts",
       },
       {
         type: AnalysisResultTypeEnum.POTENTIALLY_UNUSED,
-        symbols: [{ name: "bar", line: 0, usedInModule: false }],
+        symbols: [{ name: "bar", line: 0, symbol: null, usedInModule: false }],
         file: "bar.ts",
       },
     ].forEach((result) => state.onResult(result));
@@ -32,12 +32,12 @@ describe("present", () => {
     [
       {
         type: AnalysisResultTypeEnum.POTENTIALLY_UNUSED,
-        symbols: [{ name: "foo", line: 0, usedInModule: false }],
+        symbols: [{ name: "foo", line: 0, symbol: null, usedInModule: false }],
         file: "foo.ts",
       },
       {
         type: AnalysisResultTypeEnum.DEFINITELY_USED,
-        symbols: [{ name: "foo", line: 0, usedInModule: false }],
+        symbols: [{ name: "foo", line: 0, symbol: null, usedInModule: false }],
         file: "foo.ts",
       },
     ].forEach((result) => state.onResult(result));
@@ -53,12 +53,12 @@ describe("present", () => {
     [
       {
         type: AnalysisResultTypeEnum.POTENTIALLY_UNUSED,
-        symbols: [{ name: "foo", line: 0, usedInModule: true }],
+        symbols: [{ name: "foo", line: 0, symbol: null, usedInModule: true }],
         file: "foo.ts",
       },
       {
         type: AnalysisResultTypeEnum.POTENTIALLY_UNUSED,
-        symbols: [{ name: "bar", line: 0, usedInModule: false }],
+        symbols: [{ name: "bar", line: 0, symbol: null, usedInModule: false }],
         file: "bar.ts",
       },
     ].forEach((result) => state.onResult(result));
