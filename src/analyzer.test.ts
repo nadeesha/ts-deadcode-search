@@ -47,24 +47,46 @@ describe("analyzer", () => {
 
   it("should track named exports", () => {
     expect(getExported(foo)).toEqual([
-      { name: "x", line: 2 },
-      { name: "y", line: 3 },
-      { name: "z", line: 4 },
-      { name: "w", line: 5 },
-      { name: "ABC", line: 6 },
-      { name: "unusedC", line: 8 },
-      { name: "UnusedT", line: 9 },
+      { name: "x", start: { line: 2, column: 14 }, end: { line: 2, column: 21 } },
+      { name: "y", start: { line: 3, column: 14 }, end: { line: 3, column: 21 } },
+      { name: "z", start: { line: 4, column: 14 }, end: { line: 4, column: 26 } },
+      { name: "w", start: { line: 5, column: 14 }, end: { line: 5, column: 21 } },
+      { name: "ABC", start: { line: 6, column: 1 }, end: { line: 6, column: 35 } },
+      { name: "unusedC", start: { line: 8, column: 14 }, end: { line: 8, column: 27 } },
+      { name: "UnusedT", start: { line: 9, column: 1 }, end: { line: 9, column: 27 } },
     ]);
 
-    expect(getExported(useFoo)).toEqual([{ name: "UseFoo", line: 2 }]);
+    expect(getExported(useFoo)).toEqual([{ name: "UseFoo", start: { line: 2, column: 1 }, end: { line: 4, column: 2 } }]);
   });
 
   it("should track named imports", () => {
     expect(getPotentiallyUnused(foo)).toEqual({
       file: "/project/foo.ts",
       symbols: [
-        { line: 8, name: "unusedC", usedInModule: false },
-        { line: 9, name: "UnusedT", usedInModule: false },
+        { 
+          start:  {
+            column: 14,
+            line: 8,
+          },
+          end:  {
+            column: 27,
+            line: 8,
+          },
+          name: "unusedC",
+          usedInModule: false
+        },
+        {
+          start:  {
+            column: 1,
+            line: 9,
+          },
+          end:  {
+            column: 27,
+            line: 9,
+          },
+          name: "UnusedT",
+          usedInModule: false
+        },
       ],
       type: 0,
     });

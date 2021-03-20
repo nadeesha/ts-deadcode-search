@@ -4,7 +4,7 @@ import { ResultSymbol } from "./analyzer";
 const USED_IN_MODULE = ' (used in module)';
 
 const formatOutput = (file: string, result: ResultSymbol) => {
-  const {name, line, usedInModule} = result;
+  const {name, start: {line}, usedInModule} = result;
   return `${file}:${line} - ${name}` + (usedInModule ? USED_IN_MODULE : '');
 }
 
@@ -16,7 +16,7 @@ export const present = (state: State): string[] => {
       symbols: result.symbols
     }))
     .map(
-      ({file, symbols}) => symbols.map(sym => formatOutput(file, sym))
+      ({file, symbols}) => symbols.map(symbol =>formatOutput(file, symbol))
     );
 
   return [].concat.apply([], unused2D);

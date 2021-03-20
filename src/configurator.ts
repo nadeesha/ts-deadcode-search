@@ -5,11 +5,13 @@ import pick from "lodash/fp/pick";
 export interface IConfigInterface {
   project?: string;
   ignore?: string;
+  format?: boolean;
 }
 
 const defaultConfig: IConfigInterface = {
   project: "tsconfig.json",
   ignore: undefined,
+  format: true
 }
 
 const onlyKnownConfigOptions = pick(Object.keys(defaultConfig));

@@ -14,6 +14,7 @@ import {
 import { isDefinitelyUsedImport } from "./util/isDefinitelyUsedImport";
 import { getModuleSourceFile } from "./util/getModuleSourceFile";
 import { getNodesOfKind } from './util/getNodesOfKind';
+
 import countBy from "lodash/fp/countBy";
 import last from "lodash/fp/last";
 import { realpathSync } from "fs";
@@ -27,7 +28,14 @@ export enum AnalysisResultTypeEnum {
 
 export type ResultSymbol = {
   name: string;
-  line?: number;
+  start: {
+    line: number;
+    column: number;
+  },
+  end: {
+    line: number;
+    column: number;
+  }
   usedInModule: boolean;
 };
 
@@ -150,16 +158,33 @@ const mustIgnore = (symbol: Symbol, file: SourceFile) => {
   return last(comments)?.getText().includes(ignoreComment);
 };
 
-const lineNumber = (symbol: Symbol) =>
-  symbol.getDeclarations().map(decl => decl.getStartLineNumber()).reduce((currentMin, current) => Math.min(currentMin, current), Infinity)
+const location = (symbol: Symbol) => {
+  return symbol.getDeclarations().map(decl => {
+    const start =  decl.getSourceFile().getLineAndColumnAtPos(decl.getStart());
+    const end = decl.getSourceFile().getLineAndColumnAtPos(decl.getEnd());
+    return {
+      start,
+      end
+    };
+  }).reduce((currentLoc, newLoc) => {
+    if (currentLoc === null) {
+      return newLoc;
+    }
+    return currentLoc.start.line <  newLoc.start.line ? currentLoc : newLoc;
+  }, null);
+}
 
 export const getExported = (file: SourceFile) =>
   file.getExportSymbols()
     .filter(symbol => !mustIgnore(symbol, file))
-    .map(symbol => ({
-      name: symbol.compilerSymbol.name,
-      line: lineNumber(symbol)
-    }));
+    .map(symbol => {
+      const {start, end} = location(symbol);
+      return {
+        name: symbol.compilerSymbol.name,
+        start,
+        end
+      };
+    });
 
 /* Returns all the "import './y';" imports, which must be for side effects */
 export const importsForSideEffects = (file: SourceFile): IAnalysedResult[] =>
@@ -186,7 +211,7 @@ const exportWildCards = (file: SourceFile): IAnalysedResult[] =>
       type: AnalysisResultTypeEnum.DEFINITELY_USED
     }));
 
-const getDefinitelyUsed = (file: SourceFile): IAnalysedResult[] => ([
+export const getDefinitelyUsed = (file: SourceFile): IAnalysedResult[] => ([
   ...importsForSideEffects(file),
   ...exportWildCards(file),
 ]);
