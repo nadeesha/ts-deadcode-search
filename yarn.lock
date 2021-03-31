@@ -7008,10 +7008,10 @@ trim-off-newlines@^1.0.0:
   resolved "https://registry.yarnpkg.com/trim-off-newlines/-/trim-off-newlines-1.0.1.tgz#9f9ba9d9efa8764c387698bcbfeb2c848f11adb3"
   integrity sha1-n5up2e+odkw4dpi8v+sshI8RrbM=
 
-"true-myth@^4.1.0":
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/true-myth/-/true-myth-4.1.0.tgz#a73e1f945c5382758ba9806c15062d2ebbf35427"
-  integrity sha512-X4oBf1WOuLMfXpcKLI94dV4Htknv06vMADss3Whcybr85W1ctjZGZOzMMRYXUUBlhV4bDAGeMojzN/dw7N7qWA==
+"true-myth@^4.1.1":
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/true-myth/-/true-myth-4.1.1.tgz#ff4ac9d5130276e34aa338757e2416ec19248ba2"
+  integrity sha512-rqy30BSpxPznbbTcAcci90oZ1YR4DqvKcNXNerG5gQBU2v4jk0cygheiul5J6ExIMrgDVuanv/MkGfqZbKrNNg==
 
 ts-jest@^25.4.0:
   version "25.5.1"
